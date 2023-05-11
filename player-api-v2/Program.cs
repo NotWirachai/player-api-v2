@@ -1,6 +1,15 @@
-﻿using System.Text.Json;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Text;
+using System.Text.Json;
+using System.Threading.Tasks;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddHttpClient();
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -18,9 +27,13 @@ if (app.Environment.IsDevelopment())
 
 // กำหนดข้อมูลที่จำเป็นในการเรียกใช้ API
 string titleId = "2506C";
-string apiKey = "NHxrY1ZkcnNrZ3dZWkdMMEJOdmMxY0x4Rkhzc2oyaVg3TnZmK3BReFI2WnRjPXx7ImkiOiIyMDIzLTA1LTExVDA1OjE3OjIyWiIsImlkcCI6IkN1c3RvbSIsImUiOiIyMDIzLTA1LTEyVDA1OjE3OjIyWiIsImZpIjoiMjAyMy0wNS0xMVQwNToxNzoyMloiLCJ0aWQiOiJGbFQ2ZFdxdkRiYyIsImlkaSI6IjYzRkZBNEMwQjNCNUI5Q0MiLCJoIjoiMjU0Q0UzRENGMTJFMkIzIiwiZWMiOiJ0aXRsZV9wbGF5ZXJfYWNjb3VudCE2QzBERDM4QjYzOUNFRENDLzI1MDZDL0ZBNTJGNTE3Q0QyQTBEN0QvODU0OTZEMDlBOUUyNUQyMS8iLCJlaSI6Ijg1NDk2RDA5QTlFMjVEMjEiLCJldCI6InRpdGxlX3BsYXllcl9hY2NvdW50In0=";
+//string playFabId = "FA52F517CD2A0D7D";
+string apiKey = "NHw5dmRUeXcrK1ljYXZSYmhETlMzMGd1U0U3OHozRVhUTjgycFA5bitRZnA0PXx7ImkiOiIyMDIzLTA1LTExVDA3OjE2OjQxWiIsImlkcCI6IkN1c3RvbSIsImUiOiIyMDIzLTA1LTEyVDA3OjE2OjQxWiIsImZpIjoiMjAyMy0wNS0xMVQwNzoxNjo0MVoiLCJ0aWQiOiJKaExrbDlrNE11WSIsImlkaSI6Ik5vVFRZODg4IiwiaCI6IjI1NENFM0RDRjEyRTJCMyIsImVjIjoidGl0bGVfcGxheWVyX2FjY291bnQhNkMwREQzOEI2MzlDRURDQy8yNTA2Qy9GNkExN0YzQjI4QTk4RUI0LzYzRkZBNEMwQjNCNUI5Q0MvIiwiZWkiOiI2M0ZGQTRDMEIzQjVCOUNDIiwiZXQiOiJ0aXRsZV9wbGF5ZXJfYWNjb3VudCJ9";
 
 app.UseHttpsRedirection();
+
+
+Console.WriteLine("titleId =>> "+ "2506C"+ titleId);
 
 app.MapGet("/player", async (HttpClient httpClient) =>
 {
@@ -30,26 +43,27 @@ app.MapGet("/player", async (HttpClient httpClient) =>
     // กำหนดข้อมูลใน request body
     var data = new Dictionary<string, object>
     {
-        { "Count", 1 }
+        { "Count", 1 },
     };
 
     // แปลงข้อมูลใน request body เป็น JSON format
     string json = JsonSerializer.Serialize(data);
+    var content = new StringContent(json, Encoding.UTF8, "application/json");
 
     // กำหนด header ของ HTTP request
     httpClient.DefaultRequestHeaders.Add("X-EntityToken", apiKey);
 
-    // ส่ง HTTP GET request ไปยัง API ผ่าน HttpClient
-    HttpResponseMessage response = await httpClient.GetAsync(url);
-
+    // ส่ง HTTP POST request ไปยัง API ผ่าน HttpClient
+    HttpResponseMessage response = await httpClient.PostAsync(url, content);
     // ดึงข้อมูลใน response body และแปลงเป็น JSON object
     string responseBody = await response.Content.ReadAsStringAsync();
     dynamic jsonResult = JsonSerializer.Deserialize<dynamic>(responseBody);
+    Console.WriteLine("response =>> " + responseBody);
 
     // ส่ง JSON response กลับไปหา client
     return Results.Json(jsonResult);
 })
-.WithName("")
+.WithName("Player")
 .WithOpenApi();
 
 app.Run();
