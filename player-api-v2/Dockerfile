@@ -8,7 +8,7 @@ WORKDIR /app/player
 RUN dotnet publish -c Release -o out
 
 # Build runtime image
-FROM mcr.microsoft.com/dotnet/aspnet:7.0
+FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS runtime
 WORKDIR /app
 COPY --from=build-env /app/player/out ./
 ENTRYPOINT ["dotnet", "player-api-v2.dll"]
