@@ -54,8 +54,7 @@ app.MapGet("/player", async (HttpClient httpClient, [FromHeader(Name = "X-Entity
     // ดึงข้อมูลใน response body และแปลงเป็น JSON object
     string responseBody = await response.Content.ReadAsStringAsync();
     dynamic jsonResult = JsonSerializer.Deserialize<dynamic>(responseBody);
-    Console.WriteLine("response =>> " + responseBody);
-    Console.WriteLine("jsonResult =>> " + jsonResult);
+    
     // ส่ง JSON response กลับไปหา client
     return Results.Json(jsonResult);
 })
