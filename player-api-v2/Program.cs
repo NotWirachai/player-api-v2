@@ -54,7 +54,7 @@ app.MapGet("/player", async (HttpClient httpClient, [FromHeader(Name = "X-Entity
     {
         if (jsonResult.TryGetProperty("data", out JsonElement dataElement) && dataElement.ValueKind == JsonValueKind.Object)
         {
-            if (dataElement.TryGetProperty("CollectionIds", out JsonElement collectionIdsElement) && collectionIdsElement.ValueKind == JsonValueKind.Array && collectionIdsElement.GetArrayLength() > 0)
+            if (dataElement.TryGetProperty("CollectionIds", out JsonElement collectionIdsElement) && collectionIdsElement.ValueKind == JsonValueKind.Array && collectionIdsElement.GetArrayLength() > 1)
             {
                 // CollectionIds has values
                 Console.WriteLine("CollectionIds has values");
@@ -64,19 +64,21 @@ app.MapGet("/player", async (HttpClient httpClient, [FromHeader(Name = "X-Entity
             else
             {
                 // CollectionIds is empty
+                Console.WriteLine("CollectionIds is empty");
                 var requestBody = new Dictionary<string, object>
                     {
                         { "Amount", 1 },
                         { "Entity", new Dictionary<string, object>
                             {
-                                { "Id", "5C22B048B1D16E86" },
+                                { "Id", "42BCF731CD8BEC37" },
                                 { "Type", "title_player_account" },
                                 { "TypeString", "title_player_account" }
                             }
                         },
                         { "Item", new Dictionary<string, object>
                             {
-                                { "Id", "e9086e27-c51c-4072-ba27-621698b81fe1" }
+                                { "Id", "fbfe99f5-f593-4577-b9b4-865386073b30" },
+                                { "Type ", "bundle" },
                             }
                         },
                         {"CollectionId","State1-0" }
