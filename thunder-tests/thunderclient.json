@@ -8,7 +8,7 @@
     "method": "POST",
     "sortNum": 20000,
     "created": "2023-05-15T09:11:18.100Z",
-    "modified": "2023-05-15T12:55:23.398Z",
+    "modified": "2023-05-15T13:09:57.416Z",
     "headers": [
       {
         "name": "X-EntityToken",
@@ -18,7 +18,7 @@
     "params": [],
     "body": {
       "type": "json",
-      "raw": "{\"entityId\":\"8E15C303E9ED21CD\"}",
+      "raw": "\"8E15C303E9ED21CD\"",
       "form": []
     },
     "tests": []
