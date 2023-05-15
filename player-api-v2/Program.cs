@@ -10,6 +10,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using player_api_v2;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddHttpClient();
@@ -32,7 +33,7 @@ if (app.Environment.IsDevelopment())
 string titleId = "2506C";
 app.UseHttpsRedirection();
 
-app.MapGet("/player", async (HttpClient httpClient, [FromHeader(Name = "X-EntityToken")] string entityToken) =>
+app.MapPost("/player", async (HttpClient httpClient, [FromHeader(Name = "X-EntityToken")] string entityToken, [FromBody] EntityModel entityId) =>
 {
     string url = $"https://{titleId}.playfabapi.com/Inventory/GetInventoryCollectionIds";
 
@@ -54,11 +55,10 @@ app.MapGet("/player", async (HttpClient httpClient, [FromHeader(Name = "X-Entity
     {
         if (jsonResult.TryGetProperty("data", out JsonElement dataElement) && dataElement.ValueKind == JsonValueKind.Object)
         {
-            if (dataElement.TryGetProperty("CollectionIds", out JsonElement collectionIdsElement) && collectionIdsElement.ValueKind == JsonValueKind.Array && collectionIdsElement.GetArrayLength() > 1)
+            if (dataElement.TryGetProperty("CollectionIds", out JsonElement collectionIdsElement) && collectionIdsElement.ValueKind == JsonValueKind.Array && collectionIdsElement.GetArrayLength() >= 1)
             {
                 // CollectionIds has values
                 Console.WriteLine("CollectionIds has values");
-                // return new JsonResult(collectionIdsElement);
                 return Results.Json(jsonResult);
             }
             else
@@ -70,7 +70,7 @@ app.MapGet("/player", async (HttpClient httpClient, [FromHeader(Name = "X-Entity
                         { "Amount", 1 },
                         { "Entity", new Dictionary<string, object>
                             {
-                                { "Id", "42BCF731CD8BEC37" },
+                                { "Id", entityId },
                                 { "Type", "title_player_account" },
                                 { "TypeString", "title_player_account" }
                             }

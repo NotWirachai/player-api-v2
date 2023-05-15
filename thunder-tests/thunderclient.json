@@ -5,10 +5,10 @@
     "containerId": "",
     "name": "Get collection ID",
     "url": "{{baseUrl}}/player",
-    "method": "GET",
+    "method": "POST",
     "sortNum": 20000,
     "created": "2023-05-15T09:11:18.100Z",
-    "modified": "2023-05-15T09:14:41.056Z",
+    "modified": "2023-05-15T09:58:47.504Z",
     "headers": [
       {
         "name": "X-EntityToken",
@@ -16,6 +16,11 @@
       }
     ],
     "params": [],
+    "body": {
+      "type": "json",
+      "raw": "{\"entityId\":\"42BCF731CD8BEC37\"}",
+      "form": []
+    },
     "tests": []
   }
 ]
