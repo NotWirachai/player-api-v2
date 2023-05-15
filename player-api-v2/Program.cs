@@ -33,7 +33,8 @@ if (app.Environment.IsDevelopment())
 string titleId = "2506C";
 app.UseHttpsRedirection();
 
-app.MapPost("/player", async (HttpClient httpClient, [FromHeader(Name = "X-EntityToken")] string entityToken, [FromBody] EntityModel entityId) =>
+
+app.MapPost("/player", async (HttpClient httpClient, [FromHeader(Name = "X-EntityToken")] string entityToken, [FromBody] string entityId) =>
 {
     string url = $"https://{titleId}.playfabapi.com/Inventory/GetInventoryCollectionIds";
 
@@ -51,11 +52,18 @@ app.MapPost("/player", async (HttpClient httpClient, [FromHeader(Name = "X-Entit
     string responseBody = await response.Content.ReadAsStringAsync();
     dynamic jsonResult = JsonSerializer.Deserialize<dynamic>(responseBody);
 
-    if (jsonResult.ValueKind == JsonValueKind.Object)
+    StateModel stateModel = new StateModel();
+
+    stateModel.GenerateUniqueId();
+
+    string randomState = stateModel.GetRandomState();
+
+
+  if (jsonResult.ValueKind == JsonValueKind.Object)
     {
         if (jsonResult.TryGetProperty("data", out JsonElement dataElement) && dataElement.ValueKind == JsonValueKind.Object)
         {
-            if (dataElement.TryGetProperty("CollectionIds", out JsonElement collectionIdsElement) && collectionIdsElement.ValueKind == JsonValueKind.Array && collectionIdsElement.GetArrayLength() >= 1)
+            if (dataElement.TryGetProperty("CollectionIds", out JsonElement collectionIdsElement) && collectionIdsElement.ValueKind == JsonValueKind.Array && collectionIdsElement.GetArrayLength() > 0)
             {
                 // CollectionIds has values
                 Console.WriteLine("CollectionIds has values");
@@ -65,6 +73,7 @@ app.MapPost("/player", async (HttpClient httpClient, [FromHeader(Name = "X-Entit
             {
                 // CollectionIds is empty
                 Console.WriteLine("CollectionIds is empty");
+                
                 var requestBody = new Dictionary<string, object>
                     {
                         { "Amount", 1 },
@@ -81,7 +90,7 @@ app.MapPost("/player", async (HttpClient httpClient, [FromHeader(Name = "X-Entit
                                 { "Type ", "bundle" },
                             }
                         },
-                        {"CollectionId","State1-0" }
+                        {"CollectionId", randomState+"-"+stateModel.uniqueId }
                     };
 
                 string collectionJson = JsonSerializer.Serialize(requestBody);
