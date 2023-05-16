@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -11,6 +11,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using player_api_v2;
+using player_api_v2.Model;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddHttpClient();
@@ -34,7 +35,7 @@ string titleId = "2506C";
 app.UseHttpsRedirection();
 
 
-app.MapPost("/player", async (HttpClient httpClient, [FromHeader(Name = "X-EntityToken")] string entityToken, [FromBody] string entityId) =>
+app.MapPost("/player", async (HttpClient httpClient, [FromHeader(Name = "X-EntityToken")] string entityToken, [FromBody] CollectionModel collectionModel) =>
 {
     string url = $"https://{titleId}.playfabapi.com/Inventory/GetInventoryCollectionIds";
 
@@ -79,7 +80,7 @@ app.MapPost("/player", async (HttpClient httpClient, [FromHeader(Name = "X-Entit
                         { "Amount", 1 },
                         { "Entity", new Dictionary<string, object>
                             {
-                                { "Id", entityId },
+                                { "Id", collectionModel.EntityId },
                                 { "Type", "title_player_account" },
                                 { "TypeString", "title_player_account" }
                             }
