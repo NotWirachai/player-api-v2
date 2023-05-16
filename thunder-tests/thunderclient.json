@@ -1,0 +1,26 @@
+[
+  {
+    "_id": "174b32cb-9b59-4506-a02b-d47bfde66ac7",
+    "colId": "b21e0610-8c78-4db1-acea-2bf2a9ce3203",
+    "containerId": "",
+    "name": "Get collection ID",
+    "url": "{{baseUrl}}/player",
+    "method": "POST",
+    "sortNum": 20000,
+    "created": "2023-05-15T09:11:18.100Z",
+    "modified": "2023-05-15T13:09:57.416Z",
+    "headers": [
+      {
+        "name": "X-EntityToken",
+        "value": "{{entityToken}}"
+      }
+    ],
+    "params": [],
+    "body": {
+      "type": "json",
+      "raw": "\"8E15C303E9ED21CD\"",
+      "form": []
+    },
+    "tests": []
+  }
+]

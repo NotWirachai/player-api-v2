@@ -1,0 +1,20 @@
+[
+  {
+    "_id": "a7c4323f-27e2-4769-a15c-dea2605ecfac",
+    "name": "local",
+    "default": true,
+    "sortNum": 10000,
+    "created": "2023-05-15T09:11:43.365Z",
+    "modified": "2023-05-15T09:11:43.365Z",
+    "data": [
+      {
+        "name": "baseUrl",
+        "value": "http://localhost:5191"
+      },
+      {
+        "name": "entityToken",
+        "value": "NHxuQlBGd0VvZ0czNU5waWFOQjlPY2pjQzBxMGFIMjhJL0p2VDREbythbmpBPXx7ImkiOiIyMDIzLTA1LTE1VDEyOjU0OjUxWiIsImlkcCI6IkN1c3RvbSIsImUiOiIyMDIzLTA1LTE2VDEyOjU0OjUxWiIsImZpIjoiMjAyMy0wNS0xNVQxMjo1NDo1MVoiLCJ0aWQiOiJPakZEMngxdnpvVSIsImlkaSI6IlRFU1QxMSIsImgiOiIyNTRDRTNEQ0YxMkUyQjMiLCJlYyI6InRpdGxlX3BsYXllcl9hY2NvdW50ITZDMEREMzhCNjM5Q0VEQ0MvMjUwNkMvRUZERjUyRThEQzIzNjNGMC84RTE1QzMwM0U5RUQyMUNELyIsImVpIjoiOEUxNUMzMDNFOUVEMjFDRCIsImV0IjoidGl0bGVfcGxheWVyX2FjY291bnQifQ===="
+      }
+    ]
+  }
+]

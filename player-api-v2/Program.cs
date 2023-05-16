@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +10,8 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using player_api_v2;
+using player_api_v2.Model;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddHttpClient();
@@ -32,7 +34,8 @@ if (app.Environment.IsDevelopment())
 string titleId = "2506C";
 app.UseHttpsRedirection();
 
-app.MapGet("/player", async (HttpClient httpClient, [FromHeader(Name = "X-EntityToken")] string entityToken) =>
+
+app.MapPost("/player", async (HttpClient httpClient, [FromHeader(Name = "X-EntityToken")] string entityToken, [FromBody] CollectionModel collectionModel) =>
 {
     string url = $"https://{titleId}.playfabapi.com/Inventory/GetInventoryCollectionIds";
 
@@ -50,27 +53,34 @@ app.MapGet("/player", async (HttpClient httpClient, [FromHeader(Name = "X-Entity
     string responseBody = await response.Content.ReadAsStringAsync();
     dynamic jsonResult = JsonSerializer.Deserialize<dynamic>(responseBody);
 
-    if (jsonResult.ValueKind == JsonValueKind.Object)
+    StateModel stateModel = new StateModel();
+
+    stateModel.GenerateUniqueId();
+
+    string randomState = stateModel.GetRandomState();
+
+
+  if (jsonResult.ValueKind == JsonValueKind.Object)
     {
         if (jsonResult.TryGetProperty("data", out JsonElement dataElement) && dataElement.ValueKind == JsonValueKind.Object)
         {
-            if (dataElement.TryGetProperty("CollectionIds", out JsonElement collectionIdsElement) && collectionIdsElement.ValueKind == JsonValueKind.Array && collectionIdsElement.GetArrayLength() > 1)
+            if (dataElement.TryGetProperty("CollectionIds", out JsonElement collectionIdsElement) && collectionIdsElement.ValueKind == JsonValueKind.Array && collectionIdsElement.GetArrayLength() > 0)
             {
                 // CollectionIds has values
                 Console.WriteLine("CollectionIds has values");
-                // return new JsonResult(collectionIdsElement);
                 return Results.Json(jsonResult);
             }
             else
             {
                 // CollectionIds is empty
                 Console.WriteLine("CollectionIds is empty");
+                
                 var requestBody = new Dictionary<string, object>
                     {
                         { "Amount", 1 },
                         { "Entity", new Dictionary<string, object>
                             {
-                                { "Id", "42BCF731CD8BEC37" },
+                                { "Id", collectionModel.EntityId },
                                 { "Type", "title_player_account" },
                                 { "TypeString", "title_player_account" }
                             }
@@ -81,7 +91,7 @@ app.MapGet("/player", async (HttpClient httpClient, [FromHeader(Name = "X-Entity
                                 { "Type ", "bundle" },
                             }
                         },
-                        {"CollectionId","State1-0" }
+                        {"CollectionId", randomState+"-"+stateModel.uniqueId }
                     };
 
                 string collectionJson = JsonSerializer.Serialize(requestBody);
